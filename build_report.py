@@ -71,17 +71,17 @@ if trend_score is not None: parts.append((min(5,max(0,trend_score))/5*25,25))
 if ease is not None: parts.append((min(5,max(0,ease))/5*15,15))
 if competition is not None: parts.append(((6-min(5,max(1,competition)))/5*10,10))
 if trust is not None: parts.append((min(5,max(0,trust))/5*5,5))
-    weight=sum(w for _,w in parts)
-    score=round(sum(v for v,_ in parts)/weight*100) if weight else None
-    comm_baht=round(price*commission/100,2) if price is not None and commission is not None else None
-    if score is None: rec="ข้อมูลไม่พอจัดอันดับ"
-    elif len(parts)<4: rec="ข้อมูลไม่ครบ — ตรวจเพิ่ม"
-    elif score>=75: rec="ควรพิจารณาทดลองทำคลิป"
-    elif score>=55: rec="เก็บข้อมูลเพิ่ม"
-    else: rec="พักไว้ก่อน"
-    ranked.append(dict(name=name,url=url,category=category,price=price,sales=sales,rating=rating,reviews=reviews,
-        commission=commission,comm_baht=comm_baht,trend=trend_score,score=score,rec=rec,known=len(parts),
-        checked=p.get("source_checked_at",""),notes=p.get("notes","")))
+weight=sum(w for _,w in parts)
+score=round(sum(v for v,_ in parts)/weight*100) if weight else None
+comm_baht=round(price*commission/100,2) if price is not None and commission is not None else None
+if score is None: rec="ข้อมูลไม่พอจัดอันดับ"
+elif len(parts)<4: rec="ข้อมูลไม่ครบ — ตรวจเพิ่ม"
+elif score>=75: rec="ควรพิจารณาทดลองทำคลิป"
+elif score>=55: rec="เก็บข้อมูลเพิ่ม"
+else: rec="พักไว้ก่อน"
+ranked.append(dict(name=name,url=url,category=category,price=price,sales=sales,rating=rating,reviews=reviews,
+commission=commission,comm_baht=comm_baht,trend=trend_score,score=score,rec=rec,known=len(parts),
+checked=p.get("source_checked_at",""),notes=p.get("notes","")))
 ranked.sort(key=lambda x:(x["score"] is not None,x["score"] or -1,x["known"]),reverse=True)
 ranked=ranked[:100]
 def fmt(x,suffix=""): return "ไม่มีข้อมูล" if x is None else esc(x)+suffix
