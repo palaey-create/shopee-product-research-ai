@@ -63,7 +63,7 @@ price = val(p, "price_thb")
 ease,competition,trust=val(p,"video_ease_1_to_5"),val(p,"competition_1_to_5"),val(p,"trust_1_to_5")
 matched=next((t for k,t in trend_map.items() if k in name.lower() or (category and k in category.lower())),None)
 trend_score=val(matched or {},"trend_score_1_to_5") if matched else None
-    parts=[]
+parts=[]
     if sales is not None: parts.append((min(5,max(0,sales/400))/5*15,15))
     if rating is not None: parts.append((min(5,max(0,rating))/5*10,10))
     if commission is not None: parts.append((min(5,max(0,commission/2))/5*20,20))
