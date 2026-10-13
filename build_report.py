@@ -23,6 +23,19 @@ def val(row, key):
 
 def esc(x): return html.escape(str(x or ""))
 products, trends, links = read_csv("products.csv"), read_csv("tiktok_trends.csv"), read_csv("links_to_review.csv")
+commission_rows = read_csv("commission_rates.csv")
+commission_map = {}
+
+for cr in commission_rows:
+    u = (cr.get("product_url") or "").strip()
+    n = (cr.get("product_name") or "").strip().casefold()
+    rate = val(cr, "commission_rate_pct")
+
+    if rate is not None:
+        if u:
+            commission_map["url:" + u] = cr
+        if n:
+            commission_map["name:" + n] = cr
 trend_map = {}
 for t in trends:
     key=(t.get("keyword") or "").strip().lower()
@@ -36,7 +49,17 @@ for p in products:
     name=name or "สินค้า (ยังไม่มีชื่อ)"
     category=(p.get("category") or "").strip()
     sales,rating,reviews=val(p,"displayed_sales"),val(p,"rating"),val(p,"review_count")
-    commission,price=val(p,"commission_rate_pct"),val(p,"price_thb")
+    commission_row = (
+    commission_map.get("url:" + url)
+    or commission_map.get("name:" + name.casefold())
+)
+
+commission = val(p, "commission_rate_pct")
+
+if commission is None and commission_row:
+    commission = val(commission_row, "commission_rate_pct")
+
+price = val(p, "price_thb")
     ease,competition,trust=val(p,"video_ease_1_to_5"),val(p,"competition_1_to_5"),val(p,"trust_1_to_5")
     matched=next((t for k,t in trend_map.items() if k in name.lower() or (category and k in category.lower())),None)
     trend_score=val(matched or {},"trend_score_1_to_5") if matched else None
