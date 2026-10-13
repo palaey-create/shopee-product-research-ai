@@ -64,13 +64,13 @@ ease,competition,trust=val(p,"video_ease_1_to_5"),val(p,"competition_1_to_5"),va
 matched=next((t for k,t in trend_map.items() if k in name.lower() or (category and k in category.lower())),None)
 trend_score=val(matched or {},"trend_score_1_to_5") if matched else None
 parts=[]
-    if sales is not None: parts.append((min(5,max(0,sales/400))/5*15,15))
-    if rating is not None: parts.append((min(5,max(0,rating))/5*10,10))
-    if commission is not None: parts.append((min(5,max(0,commission/2))/5*20,20))
-    if trend_score is not None: parts.append((min(5,max(0,trend_score))/5*25,25))
-    if ease is not None: parts.append((min(5,max(0,ease))/5*15,15))
-    if competition is not None: parts.append(((6-min(5,max(1,competition)))/5*10,10))
-    if trust is not None: parts.append((min(5,max(0,trust))/5*5,5))
+if sales is not None: parts.append((min(5,max(0,sales/400))/5*15,15))
+if rating is not None: parts.append((min(5,max(0,rating))/5*10,10))
+if commission is not None: parts.append((min(5,max(0,commission/2))/5*20,20))
+if trend_score is not None: parts.append((min(5,max(0,trend_score))/5*25,25))
+if ease is not None: parts.append((min(5,max(0,ease))/5*15,15))
+if competition is not None: parts.append(((6-min(5,max(1,competition)))/5*10,10))
+if trust is not None: parts.append((min(5,max(0,trust))/5*5,5))
     weight=sum(w for _,w in parts)
     score=round(sum(v for v,_ in parts)/weight*100) if weight else None
     comm_baht=round(price*commission/100,2) if price is not None and commission is not None else None
