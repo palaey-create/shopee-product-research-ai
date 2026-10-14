@@ -50,32 +50,32 @@ for p in products:
     category=(p.get("category") or "").strip()
     sales,rating,reviews=val(p,"displayed_sales"),val(p,"rating"),val(p,"review_count")
     commission_row = (
-    commission_map.get("url:" + url)
-    or commission_map.get("name:" + name.casefold())
-)
-
-commission = val(p, "commission_rate_pct")
-
-if commission is None and commission_row:
-    commission = val(commission_row, "commission_rate_pct")
-
-price = val(p, "price_thb")
-ease,competition,trust=val(p,"video_ease_1_to_5"),val(p,"competition_1_to_5"),val(p,"trust_1_to_5")
-matched=next((t for k,t in trend_map.items() if k in name.lower() or (category and k in category.lower())),None)
-trend_score=val(matched or {},"trend_score_1_to_5") if matched else None
-parts=[]
-if sales is not None: parts.append((min(5,max(0,sales/400))/5*15,15))
-if rating is not None: parts.append((min(5,max(0,rating))/5*10,10))
-if commission is not None: parts.append((min(5,max(0,commission/2))/5*20,20))
-if trend_score is not None: parts.append((min(5,max(0,trend_score))/5*25,25))
-if ease is not None: parts.append((min(5,max(0,ease))/5*15,15))
-if competition is not None: parts.append(((6-min(5,max(1,competition)))/5*10,10))
-if trust is not None: parts.append((min(5,max(0,trust))/5*5,5))
-weight=sum(w for _,w in parts)
-score=round(sum(v for v,_ in parts)/weight*100) if weight else None
-comm_baht=round(price*commission/100,2) if price is not None and commission is not None else None
-if score is None: rec="ข้อมูลไม่พอจัดอันดับ"
-elif len(parts)<4: rec="ข้อมูลไม่ครบ — ตรวจเพิ่ม"
+        commission_map.get("url:" + url)
+        or commission_map.get("name:" + name.casefold())
+    )
+    
+    commission = val(p, "commission_rate_pct")
+    
+    if commission is None and commission_row:
+        commission = val(commission_row, "commission_rate_pct")
+    
+    price = val(p, "price_thb")
+    ease,competition,trust=val(p,"video_ease_1_to_5"),val(p,"competition_1_to_5"),val(p,"trust_1_to_5")
+    matched=next((t for k,t in trend_map.items() if k in name.lower() or (category and k in category.lower())),None)
+    trend_score=val(matched or {},"trend_score_1_to_5") if matched else None
+    parts=[]
+    if sales is not None: parts.append((min(5,max(0,sales/400))/5*15,15))
+    if rating is not None: parts.append((min(5,max(0,rating))/5*10,10))
+    if commission is not None: parts.append((min(5,max(0,commission/2))/5*20,20))
+    if trend_score is not None: parts.append((min(5,max(0,trend_score))/5*25,25))
+    if ease is not None: parts.append((min(5,max(0,ease))/5*15,15))
+    if competition is not None: parts.append(((6-min(5,max(1,competition)))/5*10,10))
+    if trust is not None: parts.append((min(5,max(0,trust))/5*5,5))
+    weight=sum(w for _,w in parts)
+    score=round(sum(v for v,_ in parts)/weight*100) if weight else None
+    comm_baht=round(price*commission/100,2) if price is not None and commission is not None else None
+    if score is None: rec="ข้อมูลไม่พอจัดอันดับ"
+    elif len(parts)<4: rec="ข้อมูลไม่ครบ — ตรวจเพิ่ม"
 elif score>=75: rec="ควรพิจารณาทดลองทำคลิป"
 elif score>=55: rec="เก็บข้อมูลเพิ่ม"
 else: rec="พักไว้ก่อน"
